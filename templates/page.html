@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="head"><h1>{{ title }}</h1>{% if sub %}<p>{{ sub }}</p>{% endif %}</div>
+{% if stats %}<div class="stats">{% for l, v in stats %}<div><b>{{ v }}</b><span>{{ l }}</span></div>{% endfor %}</div>{% endif %}
+{% for b in blocks %}<section>
+{% if b.h %}<h2>{{ b.h }}</h2>{% endif %}
+{% if b.note %}<p class="note">{{ b.note }}</p>{% endif %}
+{% if b.html %}<p>{{ b.html }}</p>{% endif %}
+{% if b.chips %}<div class="chips">{% for l, h in b.chips %}<a href="{{ h }}">{{ l }}</a>{% endfor %}</div>{% endif %}
+{% if b.form %}{% set f = b.form %}
+<form class="form" method="{{ 'get' if f.via == 'get' else 'post' }}" action="{{ f.action }}" enctype="multipart/form-data">
+{% for fd in f.fields %}<label>{{ fd.label }}
+{% if fd.type == 'select' %}<select name="{{ fd.name }}">{% for k, lab in fd.opts %}<option value="{{ k }}" {% if k|string == fd.val|string %}selected{% endif %}>{{ lab }}</option>{% endfor %}</select>
+{% elif fd.type == 'textarea' %}<textarea name="{{ fd.name }}" rows="2">{{ fd.val }}</textarea>
+{% else %}<input name="{{ fd.name }}" type="{{ fd.type }}" value="{{ fd.val }}" {% if fd.type == 'text' or fd.type == 'password' or fd.type == 'email' %}required{% endif %}>{% endif %}</label>{% endfor %}
+<button>{{ f.submit }}</button></form>{% endif %}
+{% if b.cols %}<div class="wrap"><table><tr>{% for c in b.cols %}<th>{{ c }}</th>{% endfor %}</tr>
+{% for r in b.rows %}<tr>{% for v in r %}<td>{{ v }}</td>{% endfor %}</tr>
+{% else %}<tr><td colspan="{{ b.cols|length }}">Chưa có dữ liệu.</td></tr>{% endfor %}</table></div>{% endif %}
+{% if b.cards is defined %}<div class="cards">{% for c in b.cards %}<article><div class="img" style="background:linear-gradient(135deg,{{ c.c1 }},{{ c.c2 }})">{% if c.img %}<img src="{{ c.img }}" alt="{{ c.title }}" loading="lazy">{% endif %}</div><h3>{{ c.title }}</h3><p>{{ c.sub }}</p>{{ c.actions }}</article>
+{% else %}<p class="note">Chưa có nội dung.</p>{% endfor %}</div>{% endif %}
+</section>{% endfor %}
+{% endblock %}

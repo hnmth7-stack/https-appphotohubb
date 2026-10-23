@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ title }} · PhotoHub</title><link rel="stylesheet" href="/static/style.css"></head>
+<body class="{{ u.role if u else 'guest' }}">
+<nav><a class="brand" href="/">PhotoHub</a>
+{% for h, l in nav %}<a href="{{ h }}" {% if request.path == h %}class="on"{% endif %}>{{ l }}</a>{% endfor %}
+<span class="sp"></span>
+{% if u %}<em>{{ u.name }} · {{ {'customer': 'Khách hàng', 'partner': 'Đối tác', 'admin': 'Quản trị'}[u.role] }}</em><a href="/logout">Đăng xuất</a>{% endif %}</nav>
+{% for m in get_flashed_messages() %}<div class="flash">{{ m }}</div>{% endfor %}
+<main {% if not u %}class="narrow"{% endif %}>{% block body %}{% endblock %}</main>
+<footer><b>Liên hệ PhotoHub</b> · Hotline: <a href="tel:{{ contact.hotline|replace(' ', '') }}">{{ contact.hotline }}</a> · Điện thoại: <a href="tel:{{ contact.phone|replace(' ', '') }}">{{ contact.phone }}</a> · Email: <a href="mailto:{{ contact.email }}">{{ contact.email }}</a>{% if contact.address %} · {{ contact.address }}{% endif %}</footer>
+</body></html>
